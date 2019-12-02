@@ -17,7 +17,7 @@
  * Define Global Variables
  *
  */
-let start = performance.now();
+
 const ul = document.querySelector("#navbar__list");
 const data_nav = document.querySelectorAll("section[data-nav]");
 
@@ -27,6 +27,7 @@ const data_nav = document.querySelectorAll("section[data-nav]");
  *
  */
 
+//create elements and assign some elements with attributes
 const elementCreater = (element, text, classinfo) => {
   const elementContainer = document.createElement(element);
   if (text !== undefined || classinfo !== undefined) {
@@ -42,6 +43,7 @@ const elementCreater = (element, text, classinfo) => {
   }
 };
 
+//help the elementcreater() by creating and setting attributes
 const attributesAutomation = (elementTag, element, text, classInfo) => {
   if (elementTag == "a") {
     const href = document.createAttribute("href");
@@ -53,6 +55,7 @@ const attributesAutomation = (elementTag, element, text, classInfo) => {
   return element;
 };
 
+//targets area in a page to view the section selected
 const Page_yCoord_IntervalSection = menuLink_index => {
   const interval_between_sections = 800;
   const yCoord_page_libary = [400];
@@ -63,14 +66,15 @@ const Page_yCoord_IntervalSection = menuLink_index => {
   return yCoord_page_libary[menuLink_index];
 };
 
-const add_class = element_target => {
+//add a class to a element
+const add_class = (element_target, class_name) => {
   const section = document.querySelector(element_target.hash);
-  section.classList.add("your-active-class");
+  section.classList.add(class_name);
 };
-
-const remove_class = () => {
+//remove a class from a list of elements
+const remove_class = class_name => {
   for (section of data_nav) {
-    section.classList.remove("your-active-class");
+    section.classList.remove(class_name);
   }
 };
 /**
@@ -101,8 +105,9 @@ const scoller = event => {
       event.preventDefault();
       const ycoord = Page_yCoord_IntervalSection(indexOfLink);
       window.scrollTo({ top: ycoord, behavior: "smooth" });
-      remove_class();
-      add_class(event.target);
+      // Set sections as active
+      remove_class("your-active-class");
+      add_class(event.target, "your-active-class");
     }
   }
 };
@@ -117,6 +122,3 @@ window.addEventListener("DOMContentLoaded", navElementsAdder);
 
 // Scroll to section on link click
 document.addEventListener("click", scoller);
-let end = performance.now();
-console.log("performance Metric of code " + (end - start));
-// Set sections as active
