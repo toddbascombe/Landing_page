@@ -44,11 +44,16 @@ const elementCreater = (element, text, classinfo) => {
 };
 
 //help the elementcreater() by creating and setting attributes
-const attributesAutomation = (elementTag, element, text, classInfo) => {
+const attributesAutomation = (elementTag, element, text, classInfo, isDataNav=false) => {
   if (elementTag == "a") {
     const href = document.createAttribute("href");
     href.value = `#${text.id}`;
     element.setAttributeNode(href);
+  }
+  if(isDataNav){
+    const data_nav_att = document.createAttribute("data-nav");
+    data_nav_att.value = text;
+    element.
   }
   element.textContent = text.dataset.nav;
   element.className = classInfo;
@@ -77,10 +82,23 @@ const remove_class = class_name => {
     section.classList.remove(class_name);
   }
 };
+
+const elements_location = (scrollY) =>{
+  for(ele of data_nav){
+    if(ele.getBoundingClientRect().top <= window.scrollY && ele.getBoundingClientRect().bottom > window.scrollY){
+        return ele;
+    }
+  }
+}
+
+const add_section = (text)=>{
+  const section_count= data_nav.length;
+  const sectionElement = elementCreater("section", text, )
+}
 /**
  * End Helper Functions
  * Begin Main Functions
- *
+ *        
  */
 
 // build the nav
@@ -95,6 +113,7 @@ const navElementsAdder = () => {
 // Add class 'active' to section when near top of viewport
 
 // Scroll to anchor ID using scrollTO event
+
 const scoller = event => {
   const menu_links = document.querySelectorAll(".menu__link");
   for (let indexOfLink = 0; indexOfLink < menu_links.length; indexOfLink++) {
@@ -111,6 +130,25 @@ const scoller = event => {
     }
   }
 };
+
+
+
+//active links when scrolling 
+const scroll_active_links = () =>{
+  const menu_links = document.querySelectorAll(".menu__link");
+  const element_selected = elements_location(window.scroolY);
+  for(let i = 0; i < menu_links.length; i++){
+    if(menu_links[i].attributes.href.value === `#${element_selected.id}`){
+      menu_links[i].style.cssText = "background-color: green";
+    }
+    if(menu_links[i].attributes.href.value !== `#${element_selected.id}`){
+      menu_links[i].style.cssText = "background-color:#fff";
+    }
+  }
+}
+
+//add section dynamically
+
 /**
  * End Main Functions
  * Begin Events
@@ -122,3 +160,5 @@ window.addEventListener("DOMContentLoaded", navElementsAdder);
 
 // Scroll to section on link click
 document.addEventListener("click", scoller);
+//event handler for scrolling 
+window.addEventListener("scroll",scroll_active_links);
