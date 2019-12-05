@@ -19,7 +19,8 @@
  */
 
 const ul = document.querySelector("#navbar__list");
-const data_nav = document.querySelectorAll("section");
+const data_nav = document.querySelectorAll("section[data-nav]");
+console.log(data_nav);
 
 /**
  * End Global Variables
@@ -62,9 +63,10 @@ const attributesAutomation = (elementTag, element, text, classInfo, isDataNav=fa
 
 //targets area in a page to view the section selected
 const Page_yCoord_IntervalSection = menuLink_index => {
+  const section = document.querySelectorAll(section);
   const interval_between_sections = 800;
   const yCoord_page_libary = [400];
-  for (let i = 1; i < data_nav.length; i++) {
+  for (let i = 1; i < section.length; i++) {
     let yCoordAdd = yCoord_page_libary[i - 1] + interval_between_sections;
     yCoord_page_libary.push(yCoordAdd);
   }
@@ -84,7 +86,8 @@ const remove_class = class_name => {
 };
 
 const elements_location = (scrollY) =>{
-  for(ele of data_nav){
+  const section = document.querySelectorAll("section");
+  for(ele of section){
     if(ele.getBoundingClientRect().top <= window.scrollY && ele.getBoundingClientRect().bottom > window.scrollY){
         return ele;
     }
@@ -103,9 +106,11 @@ const elements_location = (scrollY) =>{
 
 // build the nav
 const navElementsAdder = () => {
-  for (let i = 0; i < data_nav.length; i++) {
+  const section = document.querySelectorAll("section");
+  console.log(section);
+  for (let i = 0; i < section.length; i++) {
     const liTag = elementCreater("li");
-    const aTag = elementCreater("a", data_nav[i], "menu__link");
+    const aTag = elementCreater("a", section[i], "menu__link");
     liTag.appendChild(aTag);
     ul.appendChild(liTag);
   }
@@ -115,7 +120,8 @@ const navElementsAdder = () => {
 // Scroll to anchor ID using scrollTO event
 
 const scoller = event => {
-  const menu_links = document.querySelectorAll(".menu__link");
+  const menu_links = document.querySelectorAll("a .menu__link");
+  
   for (let indexOfLink = 0; indexOfLink < menu_links.length; indexOfLink++) {
     if (
       event.target.attributes.href.value ==
@@ -155,12 +161,17 @@ const section_content = ()=>{
   const div = document.createElement("div");
   const h2 = document.createElement("h2");
   const p = document.createElement("p");
+  const id = document.createAttribute("id");
+  id.value ="section4"
+  
   data.value= "section 4";
+  section.setAttributeNode(id);
   section.setAttributeNode(data);
   div.className = "landing__container";
   h2.textContent = "section 4";
   p.textContent = "todd is the best";
   
+
   div.appendChild(h2);
   div.appendChild(p);
   section.appendChild(div);
@@ -176,8 +187,9 @@ const section_content = ()=>{
 // window.addEventListener("DOMContentLoaded",add_section);
 // Build menu
 
+
+window.addEventListener("DOMContentLoaded", section_content,true);
 window.addEventListener("DOMContentLoaded", navElementsAdder);
-window.addEventListener("DOMContentLoaded", section_content, true);
 // Scroll to section on link click
 document.addEventListener("click", scoller);
 //event handler for scrolling 
