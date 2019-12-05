@@ -19,7 +19,7 @@
  */
 
 const ul = document.querySelector("#navbar__list");
-const data_nav = document.querySelectorAll("section[data-nav]");
+const data_nav = document.querySelectorAll("section");
 
 /**
  * End Global Variables
@@ -50,11 +50,11 @@ const attributesAutomation = (elementTag, element, text, classInfo, isDataNav=fa
     href.value = `#${text.id}`;
     element.setAttributeNode(href);
   }
-  if(isDataNav){
-    const data_nav_att = document.createAttribute("data-nav");
-    data_nav_att.value = text;
-    element.
-  }
+  // if(isDataNav){
+  //   const data_nav_att = document.createAttribute("data-nav");
+  //   data_nav_att.value = text;
+  //   element.
+  // }
   element.textContent = text.dataset.nav;
   element.className = classInfo;
   return element;
@@ -91,10 +91,10 @@ const elements_location = (scrollY) =>{
   }
 }
 
-const add_section = (text)=>{
-  const section_count= data_nav.length;
-  const sectionElement = elementCreater("section", text, )
-}
+// const add_section_info = (text)=>{
+//   const section_count= data_nav.length;
+//   const sectionElement = elementCreater("section", text, )
+// }
 /**
  * End Helper Functions
  * Begin Main Functions
@@ -148,16 +148,36 @@ const scroll_active_links = () =>{
 }
 
 //add section dynamically
+const section_content = ()=>{
+  const main = document.querySelector("main");
+  const section = document.createElement('section');
+  const data = document.createAttribute("data-nav");
+  const div = document.createElement("div");
+  const h2 = document.createElement("h2");
+  const p = document.createElement("p");
+  data.value= "section 4";
+  section.setAttributeNode(data);
+  div.className = "landing__container";
+  h2.textContent = "section 4";
+  p.textContent = "todd is the best";
+  
+  div.appendChild(h2);
+  div.appendChild(p);
+  section.appendChild(div);
+  main.appendChild(section);
 
+}
 /**
  * End Main Functions
  * Begin Events
  *
  */
 
+// window.addEventListener("DOMContentLoaded",add_section);
 // Build menu
-window.addEventListener("DOMContentLoaded", navElementsAdder);
 
+window.addEventListener("DOMContentLoaded", navElementsAdder);
+window.addEventListener("DOMContentLoaded", section_content, true);
 // Scroll to section on link click
 document.addEventListener("click", scoller);
 //event handler for scrolling 
