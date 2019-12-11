@@ -19,8 +19,8 @@
  */
 
 const ul = document.querySelector("#navbar__list");
-const data_nav = document.querySelectorAll("section[data-nav]");
-console.log(data_nav);
+// const section = document.querySelectorAll("section");
+
 
 /**
  * End Global Variables
@@ -29,75 +29,60 @@ console.log(data_nav);
  */
 
 //create elements and assign some elements with attributes
-const elementCreater = (element, text, classinfo) => {
+const elementCreater = (element, attributes) => {
   const elementContainer = document.createElement(element);
-  if (text !== undefined || classinfo !== undefined) {
-    element_with_attributes = attributesAutomation(
-      element,
-      elementContainer,
-      text,
-      classinfo
-    );
+  if(!(attributes == undefined)){
+    const element_with_attributes = attributesCreater(elementContainer, attributes);
     return element_with_attributes;
-  } else {
+  }else{
     return elementContainer;
   }
+
 };
 
 //help the elementcreater() by creating and setting attributes
-const attributesAutomation = (elementTag, element, text, classInfo, isDataNav=false) => {
-  if (elementTag == "a") {
-    const href = document.createAttribute("href");
-    href.value = `#${text.id}`;
-    element.setAttributeNode(href);
+const attributesCreater = (element_tag, attributesObj) => {
+  if(!(attributesObj == undefined)){
+    const attributes = Object.entries(attributesObj);
+    for(let i=0; i < attributes.length; i++){
+      const attr = document.createAttribute(attributes[i][0]);
+      attr.value = attributes[i][1];
+      element_tag.setAttributeNode(attr);
+    }
   }
-  // if(isDataNav){
-  //   const data_nav_att = document.createAttribute("data-nav");
-  //   data_nav_att.value = text;
-  //   element.
-  // }
-  element.textContent = text.dataset.nav;
-  element.className = classInfo;
-  return element;
+  return element_tag;
 };
 
-//targets area in a page to view the section selected
-const Page_yCoord_IntervalSection = menuLink_index => {
-  const section = document.querySelectorAll(section);
-  const interval_between_sections = 800;
-  const yCoord_page_libary = [400];
-  for (let i = 1; i < section.length; i++) {
-    let yCoordAdd = yCoord_page_libary[i - 1] + interval_between_sections;
-    yCoord_page_libary.push(yCoordAdd);
-  }
-  return yCoord_page_libary[menuLink_index];
-};
-
+//targets area in a page to view the section select
 //add a class to a element
 const add_class = (element_target, class_name) => {
   const section = document.querySelector(element_target.hash);
   section.classList.add(class_name);
 };
 //remove a class from a list of elements
-const remove_class = class_name => {
-  for (section of data_nav) {
+const remove_class = (class_name) => {
+  const sections = document.querySelectorAll("section");
+  for (section of sections) {
     section.classList.remove(class_name);
   }
 };
 
-const elements_location = (scrollY) =>{
-  const section = document.querySelectorAll("section");
-  for(ele of section){
-    if(ele.getBoundingClientRect().top <= window.scrollY && ele.getBoundingClientRect().bottom > window.scrollY){
-        return ele;
-    }
-  }
+const element_location = (element)=>{
+  let bodyElem = document.body.getBoundingClientRect().top;
+  let element_section = element.getBoundingClientRect().top;
+  let area_offset = element_section - bodyElem;
+  return area_offset; 
 }
 
-// const add_section_info = (text)=>{
-//   const section_count= data_nav.length;
-//   const sectionElement = elementCreater("section", text, )
-// }
+const section_location_scrolling = ()=>{
+  const section_elements = document.querySelectorAll("section");
+  const section_top_points = [];
+  for (section_element of section_elements){
+    section_top_points.push(element_location(section_element));
+  }
+  return section_top_points;
+}
+
 /**
  * End Helper Functions
  * Begin Main Functions
@@ -107,10 +92,11 @@ const elements_location = (scrollY) =>{
 // build the nav
 const navElementsAdder = () => {
   const section = document.querySelectorAll("section");
-  console.log(section);
   for (let i = 0; i < section.length; i++) {
     const liTag = elementCreater("li");
-    const aTag = elementCreater("a", section[i], "menu__link");
+    const aTag = elementCreater("a", {"href": `#section${i + 1}`});
+    aTag.className = "menu__link";
+    aTag.textContent =`section ${i+1}`;
     liTag.appendChild(aTag);
     ul.appendChild(liTag);
   }
@@ -119,64 +105,47 @@ const navElementsAdder = () => {
 
 // Scroll to anchor ID using scrollTO event
 
-const scoller = event => {
-  const menu_links = document.querySelectorAll("a .menu__link");
-  
-  for (let indexOfLink = 0; indexOfLink < menu_links.length; indexOfLink++) {
-    if (
-      event.target.attributes.href.value ==
-      menu_links[indexOfLink].attributes.href.value
-    ) {
-      event.preventDefault();
-      const ycoord = Page_yCoord_IntervalSection(indexOfLink);
-      window.scrollTo({ top: ycoord, behavior: "smooth" });
-      // Set sections as active
-      remove_class("your-active-class");
-      add_class(event.target, "your-active-class");
-    }
-  }
-};
-
-
-
-//active links when scrolling 
-const scroll_active_links = () =>{
-  const menu_links = document.querySelectorAll(".menu__link");
-  const element_selected = elements_location(window.scroolY);
-  for(let i = 0; i < menu_links.length; i++){
-    if(menu_links[i].attributes.href.value === `#${element_selected.id}`){
-      menu_links[i].style.cssText = "background-color: green";
-    }
-    if(menu_links[i].attributes.href.value !== `#${element_selected.id}`){
-      menu_links[i].style.cssText = "background-color:#fff";
-    }
-  }
-}
-
 //add section dynamically
 const section_content = ()=>{
   const main = document.querySelector("main");
-  const section = document.createElement('section');
-  const data = document.createAttribute("data-nav");
-  const div = document.createElement("div");
-  const h2 = document.createElement("h2");
-  const p = document.createElement("p");
-  const id = document.createAttribute("id");
-  id.value ="section4"
-  
-  data.value= "section 4";
-  section.setAttributeNode(id);
-  section.setAttributeNode(data);
-  div.className = "landing__container";
-  h2.textContent = "section 4";
-  p.textContent = "todd is the best";
-  
+  const section_new = elementCreater("section", {"id":"section4", "data-nav":"section 4"});
+  const div_new = elementCreater("div");
+  const h2_new = elementCreater("h2");
+  const p_new = elementCreater("p");
+  div_new.className = "landing__container";
+  h2_new.textContent = "Dragon Ball Z(all of them)";
+  p_new.textContent = `Dragon Ball Z" follows the adventures of Goku who, along
+   with the Z Warriors, defends the Earth against evil. The action adventures are 
+   entertaining and reinforce the concept of good versus evil. "Dragon Ball Z" teaches 
+   valuable character virtues such as teamwork, loyalty, and trustworthiness.`
 
-  div.appendChild(h2);
-  div.appendChild(p);
-  section.appendChild(div);
-  main.appendChild(section);
+  div_new.appendChild(h2_new);
+  div_new.appendChild(p_new);
+  section_new.appendChild(div_new);
+  main.appendChild(section_new);
 
+}
+
+const click_on_nav_link = (evt)=>{
+  if(evt.target.className == "menu__link"){
+    const section_element = document.querySelector(evt.target.hash)
+    const section_top = element_location(section_element);
+    window.scrollTo({top:section_top, behavior: "smooth"});
+    remove_class("your-active-class");
+    add_class(evt.target, "your-active-class");
+  }
+}
+
+const scroll_active_links = ()=>{
+  const section_points = section_location_scrolling();
+  for(let i = 0; i < section_points.length; i++){
+    const links = document.querySelectorAll(".menu__link");
+    if(window.scrollY >= section_points[i] && !(window.scrollY > section_points[i+1])){
+      links[i].style.cssText = "background-color: green;";
+    }else{
+      links[i].style.cssText = "background-color: #fff;";
+    }
+  }
 }
 /**
  * End Main Functions
@@ -184,13 +153,8 @@ const section_content = ()=>{
  *
  */
 
-// window.addEventListener("DOMContentLoaded",add_section);
-// Build menu
-
-
 window.addEventListener("DOMContentLoaded", section_content,true);
 window.addEventListener("DOMContentLoaded", navElementsAdder);
 // Scroll to section on link click
-document.addEventListener("click", scoller);
-//event handler for scrolling 
-window.addEventListener("scroll",scroll_active_links);
+document.addEventListener('click', click_on_nav_link);
+window.addEventListener("scroll", scroll_active_links);
