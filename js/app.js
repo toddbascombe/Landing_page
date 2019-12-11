@@ -19,7 +19,7 @@
  */
 
 const ul = document.querySelector("#navbar__list");
-// const section = document.querySelectorAll("section");
+
 
 
 /**
@@ -53,7 +53,7 @@ const attributesCreater = (element_tag, attributesObj) => {
   return element_tag;
 };
 
-//targets area in a page to view the section select
+
 //add a class to a element
 const add_class = (element_target, class_name) => {
   const section = document.querySelector(element_target.hash);
@@ -67,6 +67,7 @@ const remove_class = (class_name) => {
   }
 };
 
+//find the y coordinates of the section element and return the value
 const element_location = (element)=>{
   let bodyElem = document.body.getBoundingClientRect().top;
   let element_section = element.getBoundingClientRect().top;
@@ -74,6 +75,7 @@ const element_location = (element)=>{
   return area_offset; 
 }
 
+//show active links while scrolling 
 const section_location_scrolling = ()=>{
   const section_elements = document.querySelectorAll("section");
   const section_top_points = [];
@@ -126,6 +128,7 @@ const section_content = ()=>{
 
 }
 
+//scroll to a section when menu links are clicked
 const click_on_nav_link = (evt)=>{
   if(evt.target.className == "menu__link"){
     const section_element = document.querySelector(evt.target.hash)
@@ -136,6 +139,7 @@ const click_on_nav_link = (evt)=>{
   }
 }
 
+//while scroll change the background color for the menu links to green
 const scroll_active_links = ()=>{
   const section_points = section_location_scrolling();
   for(let i = 0; i < section_points.length; i++){
@@ -153,8 +157,11 @@ const scroll_active_links = ()=>{
  *
  */
 
+ //load the section content function first (in the capture phase)
 window.addEventListener("DOMContentLoaded", section_content,true);
+//load the navElementAdder function second in the bubbling phase
 window.addEventListener("DOMContentLoaded", navElementsAdder);
 // Scroll to section on link click
 document.addEventListener('click', click_on_nav_link);
+//listen for a scroll event
 window.addEventListener("scroll", scroll_active_links);
